@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Study Performance Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --accent-color: #2b6cb0;
+            --bg-color: #f7fafc;
+        }
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2d3748;
+        }
+        .header-card {
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .form-card, .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        .gpa-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+        .grade-badge {
+            font-size: 1.5rem;
+            padding: 8px 20px;
+            border-radius: 30px;
+        }
+        .btn-predict {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .btn-predict:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="header-card text-center">
+        <h1><i class="fa-solid fa-graduation-cap me-2"></i>Student Study Performance Predictor</h1>
+        <p class="mb-0 opacity-75">Mini Project: Machine Learning Supervised Academic Performance Evaluator</p>
+    </div>
+
+    <div class="row">
+        <!-- Input Form -->
+        <div class="col-lg-7">
+            <div class="form-card">
+                <h4 class="mb-4 text-primary"><i class="fa-solid fa-sliders me-2"></i>Student Attributes</h4>
+                <form id="predictionForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Age (years)</label>
+                            <input type="number" id="age" class="form-control" value="16" min="15" max="18" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select id="gender" class="form-select">
+                                <option value="0">Male</option>
+                                <option value="1">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Ethnicity</label>
+                            <select id="ethnicity" class="form-select">
+                                <option value="0">Caucasian</option>
+                                <option value="1">African American</option>
+                                <option value="2">Asian</option>
+                                <option value="3">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Parental Education Level</label>
+                            <select id="parentalEducation" class="form-select">
+                                <option value="0">None</option>
+                                <option value="1">High School</option>
+                                <option value="2" selected>Some College</option>
+                                <option value="3">Bachelor's Degree</option>
+                                <option value="4">Higher Degree</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Weekly Study Hours (0 - 20 hrs)</label>
+                            <input type="number" id="studyTime" class="form-control" value="12" min="0" max="20" step="0.5" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Absences (0 - 30 days)</label>
+                            <input type="number" id="absences" class="form-control" value="5" min="0" max="30" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tutoring Support</label>
+                            <select id="tutoring" class="form-select">
+                                <option value="0">No</option>
+                                <option value="1" selected>Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Parental Support</label>
+                            <select id="parentalSupport" class="form-select">
+                                <option value="0">None</option>
+                                <option value="1">Low</option>
+                                <option value="2" selected>Moderate</option>
+                                <option value="3">High</option>
+                                <option value="4">Very High</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <label class="form-label">Extracurricular</label>
+                            <select id="extracurricular" class="form-select">
+                                <option value="0">No</option>
+                                <option value="1" selected>Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-label">Sports</label>
+                            <select id="sports" class="form-select">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-label">Music</label>
+                            <select id="music" class="form-select">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <label class="form-label">Volunteering</label>
+                            <select id="volunteering" class="form-select">
+                                <option value="0" selected>No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-4 text-center">
+                            <button type="button" onclick="calculateGPA()" class="btn btn-predict w-100">
+                                <i class="fa-solid fa-calculator me-2"></i> Predict Student Performance
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Output Dashboard -->
+        <div class="col-lg-5">
+            <div class="result-card text-center h-100 d-flex flex-column justify-content-center">
+                <h5 class="text-muted">PREDICTED GRADE POINT AVERAGE</h5>
+                <div class="gpa-display my-2" id="gpaResult">3.24</div>
+                
+                <div class="my-3">
+                    <span class="badge bg-success grade-badge" id="gradeBadge">Class B (Good)</span>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="text-start">
+                    <h6><i class="fa-solid fa-lightbulb text-warning me-2"></i>Performance Insights:</h6>
+                    <ul class="list-unstyled small mt-2" id="insightList">
+                        <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i>Absences are well controlled (< 10 days).</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i>Tutoring support adds +0.22 GPA advantage.</li>
+                        <li><i class="fa-solid fa-circle-info text-info me-2"></i>Increasing weekly study by 5 hrs will yield +0.15 GPA gain.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateGPA() {
+    // Input Values
+    const age = parseFloat(document.getElementById('age').value) || 16;
+    const gender = parseFloat(document.getElementById('gender').value);
+    const ethnicity = parseFloat(document.getElementById('ethnicity').value);
+    const parentalEducation = parseFloat(document.getElementById('parentalEducation').value);
+    const studyTime = parseFloat(document.getElementById('studyTime').value) || 0;
+    const absences = parseFloat(document.getElementById('absences').value) || 0;
+    const tutoring = parseFloat(document.getElementById('tutoring').value);
+    const parentalSupport = parseFloat(document.getElementById('parentalSupport').value);
+    const extracurricular = parseFloat(document.getElementById('extracurricular').value);
+    const sports = parseFloat(document.getElementById('sports').value);
+    const music = parseFloat(document.getElementById('music').value);
+    const volunteering = parseFloat(document.getElementById('volunteering').value);
+
+    // Trained Linear Regression Weights
+    let gpa = 3.2505 
+        + (age * 0.0002)
+        - (gender * 0.0245)
+        + (ethnicity * 0.0248)
+        - (parentalEducation * 0.0360)
+        + (studyTime * 0.0290)
+        - (absences * 0.0995)
+        + (tutoring * 0.2241)
+        + (parentalSupport * 0.1550)
+        + (extracurricular * 0.1760)
+        + (sports * 0.1180)
+        + (music * 0.1600)
+        + (volunteering * 0.0050);
+
+    // Clamp GPA between 0.00 and 4.00
+    gpa = Math.max(0.00, Math.min(4.00, gpa));
+
+    // Display GPA
+    document.getElementById('gpaResult').innerText = gpa.toFixed(2);
+
+    // Determine Grade Class
+    const badge = document.getElementById('gradeBadge');
+    let gradeText = "";
+    let badgeClass = "";
+
+    if (gpa >= 3.5) {
+        gradeText = "Class A (Excellent)";
+        badgeClass = "bg-success";
+    } else if (gpa >= 3.0) {
+        gradeText = "Class B (Good)";
+        badgeClass = "bg-primary";
+    } else if (gpa >= 2.5) {
+        gradeText = "Class C (Average)";
+        badgeClass = "bg-info text-dark";
+    } else if (gpa >= 2.0) {
+        gradeText = "Class D (Below Avg)";
+        badgeClass = "bg-warning text-dark";
+    } else {
+        gradeText = "Class F (At Risk)";
+        badgeClass = "bg-danger";
+    }
+
+    badge.className = "badge grade-badge " + badgeClass;
+    badge.innerText = gradeText;
+
+    // Dynamic Insights
+    const insightList = document.getElementById('insightList');
+    insightList.innerHTML = '';
+
+    if (absences > 15) {
+        insightList.innerHTML += `<li class="mb-2 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>High Absences (${absences} days) severely reduces GPA (-${(absences*0.1).toFixed(1)} pts).</li>`;
+    } else {
+        insightList.innerHTML += `<li class="mb-2 text-success"><i class="fa-solid fa-check me-2"></i>Attendance is healthy (${absences} absences).</li>`;
+    }
+
+    if (studyTime < 8) {
+        insightList.innerHTML += `<li class="mb-2 text-warning"><i class="fa-solid fa-clock me-2"></i>Study time is low (${studyTime} hrs/wk). Target at least 12 hrs.</li>`;
+    } else {
+        insightList.innerHTML += `<li class="mb-2 text-success"><i class="fa-solid fa-book-open me-2"></i>Strong study regimen (${studyTime} hrs/wk).</li>`;
+    }
+
+    if (tutoring === 1) {
+        insightList.innerHTML += `<li class="mb-2 text-primary"><i class="fa-solid fa-user-check me-2"></i>Tutoring support adds +0.22 GPA bonus.</li>`;
+    } else {
+        insightList.innerHTML += `<li class="mb-2 text-muted"><i class="fa-solid fa-circle-plus me-2"></i>Enrolling in tutoring could boost GPA by +0.22.</li>`;
+    }
+}
+
+// Initial Run
+calculateGPA();
+</script>
+</body>
+</html>
